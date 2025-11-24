@@ -46,38 +46,51 @@
   - Integration: multi-device switch last-write-wins; trip lock prevents switch.
   - Manual: deep link to Rider screen while Driver active prompts/blocks per rules.
 
-### Task 4: Ride Posting (Driver) with Expiry & Cooldowns
+### Task 4: Maps & Location (Google Maps API)
+- Goal: Provide live maps for driver/rider discovery and trip tracking using Google Maps Platform, with secure key handling for Expo native and web.
+- Pass if:
+  - Google Maps SDK loads via `MapContext` on web; native uses Expo Location + static map/markers (or Maps SDK if enabled) with graceful fallback when offline.
+  - API keys managed via env (no hardcoding); restricted to platform origins/package signatures.
+  - Location bootstrapping refreshes cached location; errors surfaced via user-friendly banners; offline degrades to manual entry.
+  - Map overlays render driver posts and rider pickups on Live Rides/Details screens; tap reveals post/request details.
+  - Directions/Distance API callable from backend worker/Function for trip verification (used by Task 9) with retry/backoff.
+- Tests:
+  - Unit: Map loader mocked; context returns ready/error states; fallback path exercised.
+  - Manual: SDK loads on web; native shows static map/placeholder with location dot; offline shows banner and manual inputs.
+  - Security: Verify API key restrictions (HTTP referrers/package name/sha1) and quota alerts.
+
+### Task 5: Ride Posting (Driver) with Expiry & Cooldowns
 - Goal: Enable drivers to post live rides with window/seat limits, expiry, and rate limits tied to driver status.
 - Pass if:
-  - Preconditions enforced (`activeRole=driver`, `status=active`, `hasActiveTrip=false`); GPS permission gate with manual fallback marks origin approximate.
-  - Post writes to Firestore with windowStart/end, seatsTotal/available, geohash, status `open`; auto-expire at window end via scheduler/function.
+  - Preconditions enforced (`activeRole=driver`, `status=active`, `hasActiveTrip=false`); GPS permission gate with manual fallback marks origin approximate and allows map pin drop.
+  - Post writes to Firestore with windowStart/end, seatsTotal/available, geohash, status `open`; auto-expire at window end via scheduler/function; map marker updates in feed/Live map.
   - Seat edits/cancel allowed only while open; overbooking prevented; max 3 active posts; rapid cancel cooldown applied.
 - Tests:
   - Emulator: security rules block non-owners and invalid transitions; expiry job moves to `expired`.
-  - UI: offline queue retries; manual origin flagged approximate; rapid edits resolve correctly.
+  - UI: offline queue retries; manual origin flagged approximate; map marker visible; rapid edits resolve correctly.
 
-### Task 5: Ride Requests + Holds (Rider)
+### Task 6: Ride Requests + Holds (Rider)
 - Goal: Riders can request a seat with 10m hold TTL, auto-decline, and single-active-request-per-campus guard.
 - Pass if:
   - Request creates hold decrementing seatsAvailable; auto-decline after TTL or on driver cancel/expiry; acceptance promotes to booking.
   - One active request per campus enforced server-side; sending a new one auto-cancels prior pending.
-  - Rider/driver cancellations restore seat and send notifications.
+  - Rider/driver cancellations restore seat and send notifications; map view updates marker states accordingly.
 - Tests:
   - Emulator: concurrent last-seat requests grant first hold, reject second; holds TTL expire and release seat.
-  - UI: stale list tap shows “no longer available”; offline submit retries without duping.
+  - UI: stale list tap shows “no longer available”; map pins disappear on expiry; offline submit retries without duping.
 
-### Task 6: Matching Service + Rider Feed
+### Task 7: Matching Service + Rider Feed
 - Goal: Real-time feed of nearby open posts sorted by composite score (distance + window + reliability + rating).
 - Pass if:
   - Matching job recomputes `matches/{riderId}.top` with score weighting; excludes suspended drivers, zero seats, expired windows.
-  - Feed supports geohash prefix filtering (10km default) and updates within 5s of driver post changes.
+  - Feed supports geohash prefix filtering (10km default) and updates within 5s of driver post changes; map overlays consume same feed.
   - Stale data labelled when >5m since server sync; offline cache shown with banner.
 - Tests:
   - Unit: scoring function orders by score, then proximity, then recency.
-  - Integration: geofence blocks out-of-radius rider; match sweep removes expired posts.
-  - UI: feed shows at least one driver when present; cache banner displayed offline.
+  - Integration: geofence blocks out-of-radius rider; match sweep removes expired posts; map pins filtered by radius.
+  - UI: feed shows at least one driver when present; cache banner displayed offline; map displays pins consistent with list.
 
-### Task 7: Chat & Notifications
+### Task 8: Chat & Notifications
 - Goal: Ride-scoped messaging with push notifications for requests/accept/decline/cancel and chat messages.
 - Pass if:
   - Chat thread auto-created on accept; messages deliver <3s; typing offline queues locally until reconnect.
@@ -87,17 +100,17 @@
   - Integration: Expo push tokens registered and stored; notification handler routes to thread.
   - UI: send message while offline queues and flushes; block prevents new messages.
 
-### Task 8: Trip Execution & Verification
+### Task 9: Trip Execution & Verification
 - Goal: Start/complete trips with location verification, fraud checks, and 24h timeout.
 - Pass if:
-  - Start requires driver near pickup (≤100m) and at least one rider confirmed; completion requires distance ≥500m (or rider confirmation) before marking verified.
+  - Start requires driver near pickup (≤100m) and at least one rider confirmed; completion requires distance ≥500m (or rider confirmation) before marking verified; map shows live progress when available.
   - GPS loss handled with cached pings; spoof detection flags anomalies; trips auto-flag/incomplete at 24h.
   - Trip completion closes chat, triggers rating/incentive workflows, and syncs when rider reconnects.
 - Tests:
-  - Unit: verification rejects <500m; timeout job flags stale trips.
-  - Manual: start too far from pickup blocked; offline completion retries until API returns distance.
+  - Unit: verification rejects <500m; timeout job flags stale trips; Directions/Distance API mock validates call contract.
+  - Manual: start too far from pickup blocked; live map shows position; offline completion retries until API returns distance.
 
-### Task 9: Reports & Suspension
+### Task 10: Reports & Suspension
 - Goal: Post-trip rider reports with auto-suspension at 3 unique riders in 30 days and admin override.
 - Pass if:
   - One report per rider per trip; canceled trips excluded; reports older than 30d drop from active count.
@@ -107,7 +120,7 @@
   - Backend: distinct rider counting enforced; 3 unique reports trigger suspension; expired reports reduce count.
   - UI: report flow available only on completed trips; duplicate report blocked.
 
-### Task 10: Driver Incentives (Parking Eligibility)
+### Task 11: Driver Incentives (Parking Eligibility)
 - Goal: Eligibility badge based on verified trips with riders, with midnight reset and sync retries.
 - Pass if:
   - Completing a verified trip with ≥1 rider sets `parking_eligible=true` and `eligibility_date=today`; solo/canceled trips excluded.
@@ -117,7 +130,7 @@
   - Integration: completion event toggles eligibility; midnight job clears flag.
   - UI: badge hidden on next day and for solo trips; resilience to backend outage (local badge + retry).
 
-### Task 11: Driver Ratings
+### Task 12: Driver Ratings
 - Goal: Per-trip rating prompt for riders with aggregation, moderation, and visibility on driver profile/matching.
 - Pass if:
   - Rating available only when trip completed and within 24h; one per rider per trip; optional feedback moderated/flagged.
@@ -127,17 +140,17 @@
   - Unit: duplicate ratings rejected; late submissions blocked; average recalculates after delete.
   - UI: rating modal appears post-trip; offensive content filtered/hidden.
 
-### Task 12: Observability & Security Hardening
+### Task 13: Observability & Security Hardening
 - Goal: Telemetry, throttling, and rule coverage across critical flows.
 - Pass if:
   - Firebase/App logs events: auth, role_switch, ride_post, request_send, message_send, trip_complete, fraud_flag, report_submit.
-  - Rate limits: auth sends per IP/email, ride posts per driver, request spam throttled; alerts on error spikes.
+  - Rate limits: auth sends per IP/email, ride posts per driver, request spam throttled; alerts on error spikes; Google Maps API quotas monitored with alarms.
   - Security rules updated/tested for roles, status, seat mutations, and backend-only fields; CI runs emulator tests.
 - Tests:
   - CI: `firebase emulators:exec` runs rules tests; Playwright covers auth→post→request→chat happy path.
-  - Manual: throttling messages shown when limits exceeded.
+  - Manual: throttling messages shown when limits exceeded; Maps quota alerting verified in staging.
 
-### Task 13 (Optional): Redis Cache/Queue Layer for Backend Workers
+### Task 14 (Optional): Redis Cache/Queue Layer for Backend Workers
 - Do we need it? Not for the current Expo/Firebase-only stack or hackathon scope. Implement only if we introduce a Node/Cloud Run worker to handle high-throughput rate limits, TTL holds, and fast match recompute beyond what Firestore/Functions provide.
 - Best insertion point: backend services that orchestrate holds/matching/notifications (e.g., future Cloud Run worker invoked by Functions triggers). No client changes; the React Native app continues to talk to Firebase APIs.
 - Goal (if adopted): Centralize ephemeral state (seat holds, request rate limits, notification dedupe) with millisecond TTLs and atomic counters to reduce Firestore contention.
