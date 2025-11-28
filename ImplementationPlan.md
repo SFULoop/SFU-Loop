@@ -14,7 +14,7 @@
 
 ## Work Breakdown (Pick-up-ready Tasks)
 
-### Task 1: Firebase Auth + Domain Enforcement
+~~### Task 1: Firebase Auth + Domain Enforcement~~
 - Done - Firebase email-link auth with SFU domain enforcement, App Check gating, and emulator coverage for success/failure/expiry.
 - Goal: Deliver passwordless/OTP sign-in restricted to `@sfu.ca` (and allowlisted subdomains) with App Check and blocking functions.
 - Pass if:

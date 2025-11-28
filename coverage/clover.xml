@@ -1,50 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1764295294614" clover="3.2.0">
-  <project timestamp="1764295294614" name="All files">
-    <metrics statements="95" coveredstatements="0" conditionals="48" coveredconditionals="0" methods="37" coveredmethods="0" elements="180" coveredelements="0" complexity="0" loc="95" ncloc="95" packages="5" files="7" classes="7"/>
+<coverage generated="1764312251612" clover="3.2.0">
+  <project timestamp="1764312251612" name="All files">
+    <metrics statements="96" coveredstatements="0" conditionals="48" coveredconditionals="0" methods="38" coveredmethods="0" elements="182" coveredelements="0" complexity="0" loc="96" ncloc="96" packages="5" files="7" classes="7"/>
     <package name="features.auth.screens">
-      <metrics statements="39" coveredstatements="0" conditionals="28" coveredconditionals="0" methods="7" coveredmethods="0"/>
+      <metrics statements="40" coveredstatements="0" conditionals="28" coveredconditionals="0" methods="8" coveredmethods="0"/>
       <file name="SignInScreen.tsx" path="/Users/yohannvinod/Github/SFU-Loop/src/features/auth/screens/SignInScreen.tsx">
-        <metrics statements="39" coveredstatements="0" conditionals="28" coveredconditionals="0" methods="7" coveredmethods="0"/>
+        <metrics statements="40" coveredstatements="0" conditionals="28" coveredconditionals="0" methods="8" coveredmethods="0"/>
         <line num="12" count="0" type="stmt"/>
         <line num="13" count="0" type="stmt"/>
         <line num="14" count="0" type="stmt"/>
-        <line num="18" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="15" count="0" type="stmt"/>
+        <line num="16" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="17" count="0" type="stmt"/>
+        <line num="18" count="0" type="stmt"/>
         <line num="19" count="0" type="stmt"/>
         <line num="20" count="0" type="stmt"/>
         <line num="21" count="0" type="stmt"/>
-        <line num="22" count="0" type="stmt"/>
         <line num="23" count="0" type="stmt"/>
-        <line num="25" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="25" count="0" type="cond" truecount="0" falsecount="4"/>
         <line num="26" count="0" type="stmt"/>
-        <line num="27" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="29" count="0" type="stmt"/>
-        <line num="32" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="33" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
+        <line num="30" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="31" count="0" type="stmt"/>
+        <line num="32" count="0" type="stmt"/>
+        <line num="35" count="0" type="stmt"/>
+        <line num="36" count="0" type="stmt"/>
         <line num="37" count="0" type="stmt"/>
         <line num="38" count="0" type="stmt"/>
         <line num="39" count="0" type="stmt"/>
         <line num="40" count="0" type="stmt"/>
-        <line num="41" count="0" type="stmt"/>
+        <line num="41" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="42" count="0" type="stmt"/>
-        <line num="43" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="44" count="0" type="stmt"/>
-        <line num="46" count="0" type="stmt"/>
-        <line num="50" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="52" count="0" type="stmt"/>
+        <line num="48" count="0" type="cond" truecount="0" falsecount="2"/>
+        <line num="50" count="0" type="stmt"/>
+        <line num="63" count="0" type="stmt"/>
+        <line num="64" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="65" count="0" type="stmt"/>
-        <line num="66" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="67" count="0" type="stmt"/>
-        <line num="86" count="0" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
+        <line num="88" count="0" type="stmt"/>
+        <line num="89" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="90" count="0" type="stmt"/>
-        <line num="91" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="92" count="0" type="stmt"/>
+        <line num="112" count="0" type="stmt"/>
+        <line num="113" count="0" type="cond" truecount="0" falsecount="2"/>
         <line num="114" count="0" type="stmt"/>
-        <line num="115" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="116" count="0" type="stmt"/>
-        <line num="136" count="0" type="stmt"/>
+        <line num="134" count="0" type="stmt"/>
       </file>
     </package>
     <package name="features.rides.screens">

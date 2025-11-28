@@ -70,7 +70,7 @@ describe('Firebase Auth emulator email link flow', () => {
   let auth: Auth;
 
   beforeAll(async () => {
-    emulatorProcess = spawn('firebase', ['emulators:start', '--only', 'auth', '--project', PROJECT_ID, '--config', 'firebase.json'], {
+    emulatorProcess = spawn('firebase', ['emulators:start', '--only', 'auth,functions', '--project', PROJECT_ID, '--config', 'firebase.json'], {
       stdio: ['ignore', 'pipe', 'pipe']
     });
 
@@ -168,4 +168,5 @@ describe('Firebase Auth emulator email link flow', () => {
     await expect(complete()).rejects.toThrow('Link expired');
     nowSpy.mockRestore();
   });
+
 });

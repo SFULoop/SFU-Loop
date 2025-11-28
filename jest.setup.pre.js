@@ -1,3 +1,4 @@
+global.self = global;
 const NativeModules = require('react-native/Libraries/BatchedBridge/NativeModules');
 
 if (!NativeModules.UIManager) {

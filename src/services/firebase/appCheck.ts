@@ -24,6 +24,7 @@ export const ensureAppCheck = () => {
   }
 
   const appCheckConfig = getFirebaseAppCheckConfig();
+
   if (!appCheckConfig.enabled || !appCheckConfig.siteKey) {
     return null;
   }

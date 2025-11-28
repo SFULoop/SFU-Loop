@@ -35,6 +35,7 @@
     "expo-splash-screen": "~31.0.10",
     "expo-status-bar": "~3.0.8",
     "firebase": "^10.11.0",
+    "firebase-tools": "^14.26.0",
     "ngeohash": "^0.6.3",
     "punycode": "^2.3.1",
     "react": "19.1.0",

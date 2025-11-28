@@ -163,10 +163,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       ensureAppCheck();
       const auth = getFirebaseAuth();
 
-      await sendSignInLinkToEmail(auth, normalized.normalized, {
+      const actionCodeSettings = {
         handleCodeInApp: true,
         url: ACTION_CODE_URL
-      });
+      };
+      console.log('Sending sign-in link with settings:', actionCodeSettings);
+
+      await sendSignInLinkToEmail(auth, normalized.normalized, actionCodeSettings);
 
       setPendingEmail(normalized.normalized);
       setPendingSentAt(now);

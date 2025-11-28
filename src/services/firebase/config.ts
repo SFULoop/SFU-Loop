@@ -111,11 +111,20 @@ export const getFirebaseEmulatorConfig = (): FirebaseEmulatorConfig => {
 
 export const getFirebaseAppCheckConfig = (): FirebaseAppCheckConfig => {
   const extra = readExpoExtra().firebase ?? {};
-  const enabled = extra.appCheckSiteKey !== undefined || readEnv('FIREBASE_APPCHECK_SITE_KEY') !== undefined;
+
+  const rawSiteKey = extra.appCheckSiteKey ?? readEnv('FIREBASE_APPCHECK_SITE_KEY');
+  const rawDebugToken = extra.appCheckDebugToken ?? readEnv('FIREBASE_APPCHECK_DEBUG_TOKEN');
+
+  // Ensure values are strings and not empty or objects
+  const siteKey = typeof rawSiteKey === 'string' && rawSiteKey.trim().length > 0 ? rawSiteKey.trim() : undefined;
+  const debugToken = typeof rawDebugToken === 'string' && rawDebugToken.trim().length > 0 ? rawDebugToken.trim() : undefined;
+
+  // Only enable if we have a valid site key
+  const enabled = !!siteKey;
 
   return {
     enabled,
-    siteKey: extra.appCheckSiteKey ?? readEnv('FIREBASE_APPCHECK_SITE_KEY'),
-    debugToken: extra.appCheckDebugToken ?? readEnv('FIREBASE_APPCHECK_DEBUG_TOKEN')
+    siteKey,
+    debugToken
   };
 };
