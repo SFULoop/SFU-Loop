@@ -11,10 +11,8 @@ type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
 const SignInScreen = ({ navigation }: Props) => {
   const { initiateSignIn, authError, pendingEmail } = useAuth();
-  const { setNickname, setGender } = useProfileStore((state) => ({
-    setNickname: state.setNickname,
-    setGender: state.setGender
-  }));
+  const setNickname = useProfileStore((state) => state.setNickname);
+  const setGender = useProfileStore((state) => state.setGender);
   const [email, setEmail] = useState(pendingEmail ?? '');
   const [nickname, setNicknameLocal] = useState('');
   const [gender, setGenderLocal] = useState<GenderOption | null>(null);

@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import * as Linking from 'expo-linking';
-import * as SecureStore from 'expo-secure-store';
+import { storage } from '../utils/storage';
 import { FirebaseError } from '@firebase/app';
 import { isSignInWithEmailLink, onAuthStateChanged, sendSignInLinkToEmail, signInWithEmailLink } from '@firebase/auth';
 import { ensureAppCheck } from '../services/firebase/appCheck';
@@ -33,15 +33,15 @@ const RESEND_THROTTLE_MS = 30_000;
 
 const persistPendingEmail = async (email: string | null, sentAt: number | null) => {
   if (email) {
-    await SecureStore.setItemAsync(PENDING_EMAIL_KEY, email);
+    await storage.setItem(PENDING_EMAIL_KEY, email);
   } else {
-    await SecureStore.deleteItemAsync(PENDING_EMAIL_KEY);
+    await storage.deleteItem(PENDING_EMAIL_KEY);
   }
 
   if (sentAt) {
-    await SecureStore.setItemAsync(PENDING_SENT_AT_KEY, String(sentAt));
+    await storage.setItem(PENDING_SENT_AT_KEY, String(sentAt));
   } else {
-    await SecureStore.deleteItemAsync(PENDING_SENT_AT_KEY);
+    await storage.deleteItem(PENDING_SENT_AT_KEY);
   }
 };
 
@@ -101,8 +101,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const loadPending = async () => {
       try {
         const [storedEmail, storedSentAt] = await Promise.all([
-          SecureStore.getItemAsync(PENDING_EMAIL_KEY),
-          SecureStore.getItemAsync(PENDING_SENT_AT_KEY)
+          storage.getItem(PENDING_EMAIL_KEY),
+          storage.getItem(PENDING_SENT_AT_KEY)
         ]);
 
         if (isCancelled) {
