@@ -9,9 +9,9 @@ import LoadingScreen from '../screens/LoadingScreen';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const AppNavigator = () => {
-  const { isLoading, isAuthenticated } = useAuth();
+  const { isInitializing, isAuthenticated } = useAuth();
 
-  if (isLoading) {
+  if (isInitializing) {
     return <LoadingScreen />;
   }
 

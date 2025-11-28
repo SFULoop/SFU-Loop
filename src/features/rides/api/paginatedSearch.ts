@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, orderBy, query, startAfter, Timestamp, where, Firestore } from 'firebase/firestore';
+import { collection, doc, getDocs, orderBy, query, startAfter, Timestamp, where, Firestore } from '@firebase/firestore';
 import { getFirestoreDb } from '../../../services/firebase';
 import { geodesicDistanceMeters } from '../../../utils/geo';
 

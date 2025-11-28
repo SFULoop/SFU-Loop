@@ -4,8 +4,8 @@ import {
   onSnapshot,
   Timestamp,
   Firestore
-} from 'firebase/firestore';
-import { FirebaseError } from 'firebase/app';
+} from '@firebase/firestore';
+import { FirebaseError } from '@firebase/app';
 import { getRidePostsCollection, buildRidePostCreateData, RidePostStatus } from '../../../services/firestore/ridePosts';
 import { getFirestoreDb } from '../../../services/firebase';
 import type { PostRideSubmitPayload, DestinationCampus, OriginPrecision } from '../types/postRide';

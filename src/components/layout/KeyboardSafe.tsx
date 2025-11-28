@@ -53,6 +53,10 @@ export const KeyboardSafe = ({
     </View>
   );
 
+  if (Platform.OS === 'web') {
+    return <View style={{ flex: 1 }}>{content}</View>;
+  }
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

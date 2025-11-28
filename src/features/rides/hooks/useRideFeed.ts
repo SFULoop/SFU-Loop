@@ -8,7 +8,7 @@ import {
   orderBy,
   startAt,
   endAt
-} from 'firebase/firestore';
+} from '@firebase/firestore';
 import { getFirestoreDb } from '../../../services/firebase';
 
 export type RideFeedItem = {

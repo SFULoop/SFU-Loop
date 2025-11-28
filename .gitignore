@@ -4,3 +4,7 @@ node_modules/
 .expo
 test-results/
 playwright-report/
+.env
+.env.*
+.env.local
+.env.*.local

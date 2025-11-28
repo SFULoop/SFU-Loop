@@ -1,6 +1,6 @@
-import { collection, doc, Firestore, getDoc, runTransaction, serverTimestamp, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
+import { collection, doc, Firestore, getDoc, runTransaction, serverTimestamp, setDoc, Timestamp, updateDoc } from '@firebase/firestore';
 import { getFirestoreDb } from '../../../services/firebase';
-import { collection as col, query, where, getDocs } from 'firebase/firestore';
+import { collection as col, query, where, getDocs } from '@firebase/firestore';
 import { geodesicDistanceMeters } from '../../../utils/geo';
 
 type Campus = 'Burnaby' | 'Surrey' | 'burnaby' | 'surrey';
