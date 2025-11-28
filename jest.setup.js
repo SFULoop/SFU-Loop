@@ -11,6 +11,31 @@ jest.mock('expo-constants', () => ({
   }
 }));
 
+const secureStoreData = {};
+jest.mock('expo-secure-store', () => ({
+  __esModule: true,
+  getItemAsync: jest.fn(async (key) => secureStoreData[key] ?? null),
+  setItemAsync: jest.fn(async (key, value) => {
+    secureStoreData[key] = value;
+  }),
+  deleteItemAsync: jest.fn(async (key) => {
+    delete secureStoreData[key];
+  }),
+  __reset: () => {
+    Object.keys(secureStoreData).forEach((key) => delete secureStoreData[key]);
+  }
+}));
+
+jest.mock('expo-linking', () => ({
+  __esModule: true,
+  createURL: (path = '/') => `https://example.com${path}`,
+  addEventListener: jest.fn(() => ({ remove: jest.fn() })),
+  getInitialURL: jest.fn(async () => null),
+  parse: jest.fn(),
+  openURL: jest.fn(),
+  canOpenURL: jest.fn(async () => true)
+}));
+
 jest.mock('expo-location', () => ({
   __esModule: true,
   PermissionStatus: {
@@ -78,6 +103,10 @@ jest.mock('@expo/vector-icons/MaterialIcons', () => {
   return ({ name, color, size }: { name: string; color?: string; size?: number }) =>
     React.createElement('Icon', { name, color, size });
 });
+
+jest.mock('@react-native-async-storage/async-storage', () =>
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock')
+);
 
 const mockNavigation = jest.fn(() => ({ navigate: jest.fn() }));
 

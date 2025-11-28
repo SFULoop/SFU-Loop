@@ -23,24 +23,27 @@ const VerifyEmailScreen = ({ route }: Props) => {
   };
 
   const message = localError ?? authError;
-  const isCodeValid = code.trim().length === 6;
+  const isCodeValid = code.trim().length >= 6;
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Enter your verification code</Text>
-      <Text style={styles.body}>We sent a 6-digit code to {email || 'your SFU email'}. Enter it below to continue.</Text>
+      <Text style={styles.body}>
+        We sent a magic link to {email || 'your SFU email'}. Paste the link or one-time code to finish signing in.
+      </Text>
       <TextInput
         style={styles.input}
         value={code}
         onChangeText={(value) => {
-          setCode(value.replace(/[^0-9]/g, ''));
+          setCode(value.trim());
           if (localError) {
             setLocalError(null);
           }
         }}
-        placeholder="000000"
-        keyboardType="number-pad"
-        maxLength={6}
+        placeholder="Paste link or code"
+        keyboardType="default"
+        autoCapitalize="none"
+        autoCorrect={false}
         textContentType="oneTimeCode"
       />
       {message ? <Text style={styles.error}>{message}</Text> : null}

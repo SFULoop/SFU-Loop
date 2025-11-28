@@ -5,6 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { AuthStackParamList } from '../../../navigation/types';
 import { useAuth } from '../../../hooks/useAuth';
 import { useProfileStore, GenderOption } from '../../../store/useProfileStore';
+import { normalizeSfuEmail } from '../../../utils/validation';
 
 type Props = NativeStackScreenProps<AuthStackParamList, 'SignIn'>;
 
@@ -39,7 +40,8 @@ const SignInScreen = ({ navigation }: Props) => {
       setNickname(trimmedNickname);
       setGender(gender);
       await initiateSignIn(email);
-      navigation.navigate('VerifyEmail', { email });
+      const normalizedEmail = normalizeSfuEmail(email)?.normalized ?? email.trim().toLowerCase();
+      navigation.navigate('VerifyEmail', { email: normalizedEmail });
     } catch (err) {
       setError((err as Error).message);
     }
@@ -51,7 +53,8 @@ const SignInScreen = ({ navigation }: Props) => {
     <KeyboardSafe scroll contentContainerStyle={styles.container} testID="KeyboardSafe.SignIn">
       <Text style={styles.title}>Verify your SFU email</Text>
       <Text style={styles.description}>
-        Share a nickname, pick a gender preference, and enter your @sfu.ca email to receive a sign-in code.
+        Share a nickname, pick a gender preference, and enter your @sfu.ca email to receive a magic link
+        or one-time code. Only SFU domains are accepted.
       </Text>
       <View style={styles.formGroup}>
         <TextInput
