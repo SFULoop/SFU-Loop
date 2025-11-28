@@ -14,6 +14,7 @@ type AuthUser = {
 
 type AuthContextValue = {
   isAuthenticated: boolean;
+  isInitializing: boolean;
   isLoading: boolean;
   user: AuthUser | null;
   pendingEmail: string | null;
@@ -88,7 +89,8 @@ const humanizeFirebaseAuthError = (error: FirebaseError) => {
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isInitializing, setIsInitializing] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const [pendingSentAt, setPendingSentAt] = useState<number | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -131,6 +133,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAuthenticated(false);
       }
 
+      setIsInitializing(false);
       setIsLoading(false);
     });
 
@@ -268,6 +271,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const value = useMemo<AuthContextValue>(
     () => ({
       isAuthenticated,
+      isInitializing,
       isLoading,
       user,
       pendingEmail,
@@ -276,7 +280,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       completeSignIn,
       signOut
     }),
-    [authError, completeSignIn, initiateSignIn, isAuthenticated, isLoading, pendingEmail, signOut, user]
+    [authError, completeSignIn, initiateSignIn, isAuthenticated, isInitializing, isLoading, pendingEmail, signOut, user]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
