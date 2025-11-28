@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where, Firestore, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, query, where, Firestore, doc, getDoc } from '@firebase/firestore';
 import { getFirestoreDb } from '../../../services/firebase';
 
 export type SearchOpenRidesParams = {

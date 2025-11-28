@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { getFirestore } from 'firebase/firestore';
+import { getFirestore } from '@firebase/firestore';
 import { getFirestoreDb } from '../../../services/firebase';
 import { acceptRequest, declineRequest } from '../api/requests';
-import { collection, onSnapshot, query, where, getDoc, doc } from 'firebase/firestore';
+import { collection, onSnapshot, query, where, getDoc, doc } from '@firebase/firestore';
 import { useDriverStateStore } from '../../../store/useDriverStateStore';
 
 type PendingItem = {

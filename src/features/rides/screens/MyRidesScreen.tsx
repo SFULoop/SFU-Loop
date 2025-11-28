@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { collection, onSnapshot, query, where } from 'firebase/firestore';
+import { collection, onSnapshot, query, where } from '@firebase/firestore';
 import { getFirestoreDb } from '../../../services/firebase';
 import { cancelRequest, cancelBooking } from '../api/requests';
 import { useDriverStateStore } from '../../../store/useDriverStateStore';

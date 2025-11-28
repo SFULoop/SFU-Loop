@@ -1,5 +1,5 @@
 import { spawn, type ChildProcessWithoutNullStreams } from 'child_process';
-import { initializeApp } from 'firebase/app';
+import { initializeApp } from '@firebase/app';
 import {
   connectAuthEmulator,
   initializeAuth,
@@ -7,7 +7,7 @@ import {
   sendSignInLinkToEmail,
   signInWithEmailLink,
   type Auth
-} from 'firebase/auth';
+} from '@firebase/auth';
 import { isMagicLinkExpired, MAGIC_LINK_TTL_MS, normalizeSfuEmail } from '../../../utils/validation';
 
 jest.setTimeout(70000);

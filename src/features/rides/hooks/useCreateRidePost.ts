@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { FirebaseError } from 'firebase/app';
+import { FirebaseError } from '@firebase/app';
 import type { PostRideSubmitPayload } from '../types/postRide';
 import type {
   RidePostClientSnapshot,

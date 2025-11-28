@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { FirebaseError } from 'firebase/app';
+import { FirebaseError } from '@firebase/app';
 import { requestRide as realRequestRide, cancelRequest as realCancelRequest, cancelBooking as realCancelBooking } from '../api/requests';
 
 type QueueItem =

@@ -1,5 +1,5 @@
 import ngeohash from 'ngeohash';
-import { collection, CollectionReference, doc, DocumentReference, Firestore, serverTimestamp, Timestamp, WithFieldValue, PartialWithFieldValue, GeoPoint } from 'firebase/firestore';
+import { collection, CollectionReference, doc, DocumentReference, Firestore, serverTimestamp, Timestamp, WithFieldValue, PartialWithFieldValue, GeoPoint } from '@firebase/firestore';
 import { getFirestoreDb } from '../firebase';
 
 export type RidePostStatus = 'open' | 'expired' | 'canceled' | 'inTrip';

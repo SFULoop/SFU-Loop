@@ -1,29 +1,23 @@
-import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
+import { initializeApp, getApps, type FirebaseApp } from '@firebase/app';
 import {
   getAuth as getWebAuth,
   connectAuthEmulator as connectAuthEmulatorWeb,
   type Auth,
   initializeAuth as initializeWebAuth,
   browserLocalPersistence,
-  setPersistence
-} from 'firebase/auth';
+  setPersistence,
+  // @ts-ignore: getReactNativePersistence is exported in RN builds but not in default types
+  getReactNativePersistence,
+  initializeAuth
+} from '@firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { connectFirestoreEmulator, getFirestore, type Firestore } from 'firebase/firestore';
-import { connectFunctionsEmulator, getFunctions, type Functions } from 'firebase/functions';
+import { connectFirestoreEmulator, getFirestore, type Firestore } from '@firebase/firestore';
+import { connectFunctionsEmulator, getFunctions, type Functions } from '@firebase/functions';
 import { Platform } from 'react-native';
 import { getFirebaseClientConfig, getFirebaseEmulatorConfig } from './config';
 
 // Lazy-load RN-specific auth to avoid Metro resolving web builds on native.
-type ReactNativeAuthModule = typeof import('@firebase/auth/dist/rn/index.js');
-let nativeAuthModule: ReactNativeAuthModule | null = null;
-
-const getNativeAuthModule = () => {
-  if (!nativeAuthModule) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    nativeAuthModule = require('@firebase/auth/dist/rn/index.js') as ReactNativeAuthModule;
-  }
-  return nativeAuthModule;
-};
+// Note: In Firebase v10+, we should use the standard entry points.
 
 let appInstance: FirebaseApp | null = null;
 let authInstance: Auth | null = null;
@@ -48,20 +42,31 @@ const initializeFirebaseAuth = () => {
   const emulatorConfig = getFirebaseEmulatorConfig();
 
   // React Native requires explicit persistence; fall back to browser local storage on web.
-  const auth =
-    Platform.OS === 'web'
-      ? initializeWebAuth(app)
-      : getNativeAuthModule().initializeAuth(app, {
-          persistence: getNativeAuthModule().getReactNativePersistence(AsyncStorage)
-        });
+  let auth: Auth;
+
+  console.log('Initializing Firebase Auth...');
+  console.log('Platform:', Platform.OS);
 
   if (Platform.OS === 'web') {
+    console.log('Using web initialization');
+    auth = initializeWebAuth(app);
     void setPersistence(auth, browserLocalPersistence);
+  } else {
+    console.log('Using RN initialization');
+    try {
+      auth = initializeAuth(app, {
+        persistence: getReactNativePersistence(AsyncStorage)
+      });
+      console.log('Auth initialized successfully');
+    } catch (e) {
+      console.error('Error initializing auth:', e);
+      throw e;
+    }
   }
 
   if (emulatorConfig.useEmulator) {
-    const connect = Platform.OS === 'web' ? connectAuthEmulatorWeb : getNativeAuthModule().connectAuthEmulator;
-    connect(auth, `http://${emulatorConfig.host}:${emulatorConfig.authPort}`, {
+    // Use the aliased connectAuthEmulatorWeb which is just connectAuthEmulator
+    connectAuthEmulatorWeb(auth, `http://${emulatorConfig.host}:${emulatorConfig.authPort}`, {
       disableWarnings: true
     });
   }

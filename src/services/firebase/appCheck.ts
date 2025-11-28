@@ -1,4 +1,4 @@
-import { initializeAppCheck, ReCaptchaV3Provider, type AppCheck } from 'firebase/app-check';
+import { initializeAppCheck, ReCaptchaV3Provider, type AppCheck } from '@firebase/app-check';
 import { Platform } from 'react-native';
 import { getFirebaseApp } from './index';
 import { getFirebaseAppCheckConfig, getFirebaseEmulatorConfig } from './config';

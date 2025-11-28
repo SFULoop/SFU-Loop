@@ -1,8 +1,8 @@
 import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import * as Linking from 'expo-linking';
 import * as SecureStore from 'expo-secure-store';
-import { FirebaseError } from 'firebase/app';
-import { isSignInWithEmailLink, onAuthStateChanged, sendSignInLinkToEmail, signInWithEmailLink } from 'firebase/auth';
+import { FirebaseError } from '@firebase/app';
+import { isSignInWithEmailLink, onAuthStateChanged, sendSignInLinkToEmail, signInWithEmailLink } from '@firebase/auth';
 import { ensureAppCheck } from '../services/firebase/appCheck';
 import { getFirebaseAuth } from '../services/firebase';
 import { isMagicLinkExpired, normalizeSfuEmail } from '../utils/validation';
@@ -140,31 +140,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
-  useEffect(() => {
-    const auth = getFirebaseAuth();
-
-    const handleUrl = ({ url }: { url: string }) => {
-      if (url && isSignInWithEmailLink(auth, url)) {
-        void completeSignIn(url).catch((error) => {
-          const message = error instanceof Error ? error.message : 'Failed to complete magic link sign-in.';
-          setAuthError(message);
-          console.warn('Failed to complete magic link sign-in', error);
-        });
-      }
-    };
-
-    const subscription = Linking.addEventListener('url', handleUrl);
-    void Linking.getInitialURL().then((initialUrl) => {
-      if (initialUrl && isSignInWithEmailLink(auth, initialUrl)) {
-        handleUrl({ url: initialUrl });
-      }
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, [completeSignIn]);
-
   const initiateSignIn = useCallback<AuthContextValue['initiateSignIn']>(async (email) => {
     const normalized = normalizeSfuEmail(email);
 
@@ -246,6 +221,31 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
     }
   }, [pendingEmail, pendingSentAt]);
+
+  useEffect(() => {
+    const auth = getFirebaseAuth();
+
+    const handleUrl = ({ url }: { url: string }) => {
+      if (url && isSignInWithEmailLink(auth, url)) {
+        void completeSignIn(url).catch((error) => {
+          const message = error instanceof Error ? error.message : 'Failed to complete magic link sign-in.';
+          setAuthError(message);
+          console.warn('Failed to complete magic link sign-in', error);
+        });
+      }
+    };
+
+    const subscription = Linking.addEventListener('url', handleUrl);
+    void Linking.getInitialURL().then((initialUrl) => {
+      if (initialUrl && isSignInWithEmailLink(auth, initialUrl)) {
+        handleUrl({ url: initialUrl });
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, [completeSignIn]);
 
   const signOut = useCallback<AuthContextValue['signOut']>(async () => {
     setIsLoading(true);

@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, query, runTransaction, serverTimestamp, setDoc, where, Firestore } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, query, runTransaction, serverTimestamp, setDoc, where, Firestore } from '@firebase/firestore';
 import { getFirestoreDb } from '../../../services/firebase';
 
 export const cancelRidePostWithNotify = async (postId: string, { db = getFirestoreDb() }: { db?: Firestore } = {}) => {
